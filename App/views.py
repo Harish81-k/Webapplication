@@ -41,7 +41,6 @@ def signup(request):
         if form.is_valid():
             User.objects.create_user(
                 username=form.cleaned_data['email'],
-                first_name=form.cleaned_data['first_name'],
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password1']
             )
