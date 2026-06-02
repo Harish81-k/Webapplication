@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceed to Order - Birla Opus Designs</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+        .navbar-custom {
+            background-color: #0f172a !important;
+            border-bottom: 1px solid #1e293b;
+        }
+        .order-hero-banner {
+            background: linear-gradient(rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.98)), 
+                        url('https://images.unsplash.com/photo-1562259949-e8e7689d7828?q=80&w=1920') no-repeat center center;
+            background-size: cover;
+            padding: 50px 0 35px 0;
+            color: #ffffff;
+        }
+        .dashboard-card {
+            border: none;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+        }
+        .text-accent-green {
+            color: #02c39a;
+            font-weight: 800;
+        }
+        .payment-method-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background-color: #f8fafc;
+            position: relative;
+        }
+        .payment-radio:checked + .payment-method-card {
+            border-color: #0f172a;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+        }
+        .payment-radio:checked + .payment-method-card .bi-circle {
+            display: none;
+        }
+        .payment-radio:checked + .payment-method-card .bi-check-circle-fill {
+            display: inline-block !important;
+            color: #02c39a;
+        }
+        .payment-radio {
+            position: absolute;
+            opacity: 0; width: 0; height: 0;
+        }
+        .btn-order {
+            background-color: #0f172a;
+            color: #ffffff;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 14px;
+            width: 100%;
+            border: 1px solid #0f172a;
+            transition: all 0.2s;
+        }
+        .btn-order:hover {
+            background-color: #1e293b;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-palette-fill text-accent-green me-2"></i>Birla Opus Designs</a>
+            <span class="navbar-text text-white">Secure Allocation Terminal</span>
+        </div>
+    </nav>
+
+    <section class="order-hero-banner mb-5 text-center text-md-start">
+        <div class="container">
+            <h1 class="display-6 fw-bold mb-1">Finalize Secure Order</h1>
+            <p class="text-white-50 mb-0">Choose your preferred allocation checkout tracking layer below.</p>
+        </div>
+    </section>
+
+    <div class="container pb-5">
+        <form id="checkout-form" method="POST" action="{% url 'place_order' %}">
+            {% csrf_token %}
+            <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id">
+            <input type="hidden" id="razorpay_order_id" name="razorpay_order_id">
+            <input type="hidden" id="razorpay_signature" name="razorpay_signature">
+
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card dashboard-card p-4 mb-4">
+                        <h4 class="fw-bold mb-4 text-dark"><i class="bi bi-credit-card-2-front me-2"></i>Payment Metrics</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="w-100 position-relative">
+                                    <input type="radio" name="payment_method" value="COD" class="payment-radio" checked>
+                                    <div class="payment-method-card d-flex flex-column h-100 justify-content-between">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <i class="bi bi-cash-stack text-dark fs-2"></i>
+                                            <i class="bi bi-circle text-muted fs-4"></i>
+                                            <i class="bi bi-check-circle-fill fs-4 d-none"></i>
+                                        </div>
+                                        <h6 class="fw-bold mb-1 text-dark">Cash On Delivery</h6>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="w-100 position-relative">
+                                    <input type="radio" name="payment_method" value="ONLINE" class="payment-radio">
+                                    <div class="payment-method-card d-flex flex-column h-100 justify-content-between">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <i class="bi bi-credit-card text-dark fs-2"></i>
+                                            <i class="bi bi-circle text-muted fs-4"></i>
+                                            <i class="bi bi-check-circle-fill fs-4 d-none"></i>
+                                        </div>
+                                        <h6 class="fw-bold mb-1 text-dark">Online Gateway</h6>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card dashboard-card p-4">
+                        <h4 class="fw-bold mb-4 text-dark">Order Metrics Calculation</h4>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fw-bold">Grand Total Accents</span>
+                            <span class="text-accent-green fs-3">₹{{ total }}</span>
+                        </div>
+                        <button type="submit" class="btn btn-order shadow-sm">Confirm Order Flow</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+     <script>
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        const selectedPaymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (selectedPaymentMethod === 'ONLINE') {
+            e.preventDefault(); 
+            
+            fetch("{% url 'create_razorpay_order' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}', 
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                var options = {
+                    "key": data.razorpay_merchant_key,
+                    "amount": data.amount,
+                    "currency": "INR",
+                    "name": "Birla Opus Designs",
+                    "order_id": data.razorpay_order_id,
+                    "handler": function (response){
+                        // 1. Update the hidden inputs with the data from Razorpay
+                        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                        document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                        document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                        
+                        // 2. Submit the form to place_order view
+                        setTimeout(function() {
+                            document.getElementById('checkout-form').submit();
+                        }, 500);
+                    },
+                    "theme": {"color": "#0f172a"}
+                };
+                var rzp = new Razorpay(options);
+                rzp.open();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Payment initiation failed. Please try again.");
+            });
+        }
+    });
+</script>
+</body>
+</html>

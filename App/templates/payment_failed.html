@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Suspended - Birla Opus Designs</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8fafc; font-family: system-ui, sans-serif; }
+        .failed-card { border: none; border-radius: 16px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.02); max-width: 550px; }
+        .icon-circle { width: 80px; height: 80px; background-color: #fee2e2; color: #ef4444; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-retry { background-color: #0f172a; color: white; border-radius: 8px; font-weight: 600; padding: 12px 30px; text-decoration: none; border: 1px solid #0f172a; transition: all 0.2s;}
+        .btn-retry:hover { background-color: #1e293b; color: white;}
+    </style>
+</head>
+<body class="d-flex align-items-center min-vh-100">
+    <div class="container text-center">
+        <div class="card failed-card mx-auto p-5">
+            <div class="icon-circle mb-4 shadow-sm"><i class="bi bi-exclamation-octagon fs-1"></i></div>
+            <h2 class="fw-bold text-dark mb-2">Transaction Suspended</h2>
+            <p class="text-muted small px-3">The secure gateway payment verification routine tracking algorithm aborted parameter confirmation signature matching constraints mismatch loop logs.</p>
+            
+            <div class="alert alert-danger border-0 small my-4 text-start py-2.5">
+                <i class="bi bi-bug me-2"></i><strong>Report Traceback Response:</strong> {{ error|default:"Verification Signature Invalid Response Node" }}
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                <a href="{% url 'checkout' %}" class="btn btn-retry shadow-sm"><i class="bi bi-arrow-clockwise me-2"></i>Retry Formulation Balance Checkout</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

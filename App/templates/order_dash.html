@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            
+            <!-- Delivery Address & Contact Section -->
+            {% if not user.is_superuser %}
+            <div class="card dashboard-card p-4 shadow-sm mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="fw-bold"><i class="bi bi-geo-alt-fill text-primary me-2"></i>Delivery Address</h5>
+                        <p class="text-secondary mt-2">
+                            {% if profile and profile.delivery_address %}
+                                {{ profile.delivery_address }}
+                            {% else %}
+                                <span class="text-danger">No address saved yet.</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="fw-bold"><i class="bi bi-telephone-fill text-primary me-2"></i>Contact Number</h5>
+                        <p class="text-secondary mt-2">
+                            {% if profile and profile.phone %}
+                                {{ profile.phone }}
+                            {% else %}
+                                <span class="text-danger">No contact number saved.</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-dark w-25">Edit Profile</a>
+            </div>
+            {% endif %}
+
+            <!-- Order History Section -->
+            <div class="card dashboard-card p-4 shadow-sm">
+                <h4 class="fw-bold mb-4">
+                    <i class="bi bi-box-seam me-2 text-primary"></i>
+                    {% if user.is_superuser %}All Customer Orders{% else %}My Order History{% endif %}
+                </h4>
+                
+                {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Order ID</th>
+                                    {% if user.is_superuser %}<th>Customer Details</th>{% endif %}
+                                    <th>Shipping Address</th>
+                                    <th>Contact</th>
+                                    <th>Total</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td><strong>#{{ order.id }}</strong></td>
+                                    {% if user.is_superuser %}
+                                        <td><strong>{{ order.user.first_name }}</strong><br><small class="text-muted">{{ order.user.email }}</small></td>
+                                    {% endif %}
+                                    
+                                    <td class="small text-muted">
+                                        {% if order.shipping_address %}{{ order.shipping_address }}{% else %}{{ profile.delivery_address }}{% endif %}
+                                    </td>
+                                    
+                                    <!-- Contact Column -->
+                                    <td class="small">{{ profile.phone|default:"N/A" }}</td>
+                                    
+                                    <td class="fw-bold">₹{{ order.total_amount }}</td>
+                                    <td><span class="badge bg-light text-dark border">{{ order.payment_method }}</span></td>
+                                    <td>
+                                        {% if order.status == 'Pending' %} <span class="badge rounded-pill bg-warning text-dark">Pending</span>
+                                        {% elif order.status == 'Cancelled' %} <span class="badge rounded-pill bg-secondary text-white">Cancelled</span>
+                                        {% elif order.status == 'Dispatched' %} <span class="badge rounded-pill bg-primary text-white">Dispatched</span>
+                                        {% elif order.status == 'Delivered' %} <span class="badge rounded-pill bg-success text-white">Delivered</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if order.status == 'Pending' %}
+                                            <a href="{% url 'cancel_order' order.id %}" class="btn btn-sm btn-outline-danger">Cancel</a>
+                                        {% elif order.status == 'Cancelled' and not user.is_superuser %}
+                                            <a href="{% url 'delete_order' order.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-bag-x fs-2"></i>
+                        <p>No orders found.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

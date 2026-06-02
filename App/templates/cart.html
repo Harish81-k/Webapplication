@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart Dashboard - Birla Opus Designs{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-dashboard-hero {
+        background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.98)), 
+                    url('https://images.unsplash.com/photo-1562259949-e8e7689d7828?q=80&w=1920') no-repeat center center;
+        background-size: cover;
+        padding: 60px 0 40px 0;
+        color: #ffffff;
+    }
+    .dashboard-card {
+        border: none;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+    }
+    .paint-thumbnail {
+        width: 65px;
+        height: 65px;
+        object-fit: cover;
+        border-radius: 10px;
+        background-color: #f8fafc;
+    }
+    .quantity-controller {
+        display: flex;
+        align-items: center;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background-color: #f8fafc;
+        overflow: hidden;
+        max-width: 120px;
+    }
+    .quantity-controller button {
+        background: none;
+        border: none;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #475569;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .quantity-controller button:hover {
+        background-color: #e2e8f0;
+    }
+    .quantity-controller span {
+        width: 40px;
+        text-align: center;
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .price-text {
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .total-accent {
+        color: #02c39a;
+        font-weight: 800;
+    }
+    .btn-checkout {
+        background-color: #0f172a;
+        color: #ffffff;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 14px;
+        transition: all 0.2s;
+    }
+    .btn-checkout:hover {
+        background-color: #1e293b;
+        color: #ffffff;
+    }
+    .btn-checkout:disabled {
+        background-color: #94a3b8;
+        cursor: not-allowed;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-100 min-vh-100" style="background-color: #f8fafc;">
+    
+    <section class="cart-dashboard-hero mb-5">
+        <div class="container text-center text-md-start d-md-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="display-6 fw-bold mb-1">Cart Estimation Dashboard</h1>
+                <p class="text-white-50 mb-0">Review and optimize your curated design formulations.</p>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <a href="{% url 'gallery' %}" class="btn btn-outline-light btn-sm rounded-3 px-3">
+                    <i class="fas fa-plus me-1"></i> Add More Paints
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container pb-5">
+        <div class="row g-4">
+            
+            <div class="col-lg-8">
+                <div class="card dashboard-card p-4">
+                    <div class="d-flex align-items-center justify-content-between pb-3 border-bottom mb-3">
+                        <h4 class="fw-bold mb-0 text-dark">Selected Formulas</h4>
+                        <span class="badge bg-light text-dark border fw-semibold">{{ cart|length }} Product{{ cart|length|pluralize }}</span>
+                    </div>
+
+                    {% if cart %}
+                        {% for item in cart %}
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between py-3 border-bottom gap-3">
+                            
+                            <div class="d-flex align-items-center gap-3" style="min-width: 280px;">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="paint-thumbnail">
+                                {% else %}
+                                    <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?q=80&w=200" alt="Placeholder" class="paint-thumbnail">
+                                {% endif %}
+                                <div>
+                                    <h5 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem;">{{ item.product.name }}</h5>
+                                    <div class="d-flex align-items-center gap-2 my-1">
+                                        <span class="badge border text-secondary small bg-light" style="font-size: 0.7rem;">{{ item.product.color_code }}</span>
+                                        <div style="width: 14px; height: 14px; background-color: {{ item.product.color_code }}; border-radius: 3px; border: 1px solid #cbd5e1;"></div>
+                                    </div>
+                                    <span class="text-muted small">₹{{ item.price }} / Liter</span>
+                                </div>
+                            </div>
+
+                            <!-- 100% Fail-Proof Standard HTML Form for Updates -->
+                            <div class="quantity-controller">
+                                <!-- Decrement Form -->
+                                <form action="{% url 'cart_update' item.product.id %}" method="post" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
+                                    <button type="submit">
+                                        <i class="fas fa-minus small"></i>
+                                    </button>
+                                </form>
+                                
+                                <span>{{ item.quantity }}</span>
+                                
+                                <!-- Increment Form -->
+                                <form action="{% url 'cart_update' item.product.id %}" method="post" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
+                                    <button type="submit">
+                                        <i class="fas fa-plus small"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between justify-content-md-end gap-4">
+                                <span class="price-text fs-5">₹{{ item.total_price }}</span>
+                                <form action="{% url 'cart_remove' item.product.id %}" method="post" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn p-0 text-muted btn-link" style="box-shadow: none;">
+                                        <i class="fas fa-trash-alt text-danger opacity-75"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="text-muted mb-3 fs-1"><i class="fas fa-paint-roller"></i></div>
+                            <h5 class="fw-bold text-secondary">Your Design Palette is Empty</h5>
+                            <p class="text-muted small mb-0">Head back to the premium gallery to curate layout samples.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card dashboard-card p-4">
+                    <h4 class="fw-bold mb-4 text-dark">Price Summary</h4>
+                    
+                    <div class="d-flex justify-content-between mb-2 text-secondary small">
+                        <span>Base Coatings Cost</span>
+                        <span class="fw-semibold text-dark">₹{{ subtotal }}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2 text-secondary small">
+                        <span>Logistics Delivery</span>
+                        {% if subtotal > 5000 or subtotal == 0 %}
+                            <span class="text-success fw-bold">FREE</span>
+                        {% else %}
+                            <span class="fw-semibold text-dark">₹50.00</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-3 text-secondary small">
+                        <span>Estimated Tax (18% GST)</span>
+                        <span class="fw-semibold text-dark">₹{{ tax }}</span>
+                    </div>
+
+                    <hr class="my-3" style="border-top: 1px dashed #cbd5e1;">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="fw-bold text-dark">Grand Total</span>
+                        <span class="total-accent fs-3">₹{{ total }}</span>
+                    </div>
+
+                   <a href="{% url 'checkout' %}" 
+   class="btn btn-checkout w-100 shadow-sm text-center d-block {% if not cart %}disabled pointer-events-none{% endif %}" 
+   {% if not cart %}style="pointer-events: none; opacity: 0.65;"{% endif %}>
+    Proceed to Final Allocation
+</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
