@@ -1,29 +1,27 @@
-# --- Core Frameworks ---
-Django>=6.0.5
-gunicorn
-whitenoise
-python-dotenv
-psycopg2-binary
+# --- Core Frameworks (Constrained) ---
+django>=6.0.0
+gunicorn>=23.0.0
+whitenoise>=6.8.0
+python-dotenv>=1.0.0
+psycopg2-binary>=2.9.9
 
-# --- AI & Generative Services ---
-# Removing rigid pins for protobuf and grpcio-status to allow auto-resolution
-google-generativeai
-google-api-python-client
-google-api-core
-proto-plus
-protobuf>=6.31.1
-grpcio>=1.75.0
-grpcio-status>=1.75.1
+# --- AI & Generative Services (Stable pairings) ---
+google-generativeai>=0.8.0
+google-api-python-client>=2.150.0
+google-api-core>=2.20.0
+protobuf>=4.25.0,<6.0.0
+grpcio>=1.65.0
+grpcio-status>=1.65.0
 
 # --- Others ---
-django-allauth
-django-widget-tweaks
-PyJWT
-requests
-oauthlib
-requests-oauthlib
-razorpay
-twilio
-pillow
-tqdm
-sqlparse
+django-allauth>=65.0.0
+django-widget-tweaks>=1.5.0
+PyJWT>=2.9.0
+requests>=2.32.0
+oauthlib>=3.2.0
+requests-oauthlib>=2.0.0
+razorpay>=2.0.0
+twilio>=9.0.0
+pillow>=11.0.0
+tqdm>=4.66.0
+sqlparse>=0.5.0
