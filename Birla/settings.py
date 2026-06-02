@@ -123,4 +123,8 @@ CART_SESSION_ID = 'cart'
 RAZORPAY_KEY_ID = "rzp_test_SwKlrcPvKQ6KcV"
 RAZORPAY_KEY_SECRET = "NZOllAjvc2cHlyi2Sj2GfV5y"
 
+# settings.py
+
+ALLOWED_HOSTS = ['*']
+
 
