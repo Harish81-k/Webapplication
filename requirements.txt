@@ -6,14 +6,14 @@ python-dotenv
 psycopg2-binary
 
 # --- AI & Generative Services ---
-# Pinning protobuf to a version that is accepted by both Google-GenAI and older grpcio
-protobuf==5.29.3
+# Removing rigid pins for protobuf and grpcio-status to allow auto-resolution
 google-generativeai
 google-api-python-client
 google-api-core
 proto-plus
-grpcio==1.75.0
-grpcio-status==1.75.1
+protobuf>=6.31.1
+grpcio>=1.75.0
+grpcio-status>=1.75.1
 
 # --- Others ---
 django-allauth
