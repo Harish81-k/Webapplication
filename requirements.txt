@@ -1,24 +1,31 @@
 # --- Core Frameworks ---
-Django>=6.0.0
+Django>=6.0.5
 gunicorn>=26.0.0
 whitenoise>=6.12.0
-python-dotenv>=1.2.0
+python-dotenv>=1.2.2
+psycopg2-binary>=2.9.10
 
-# --- Google Libraries (Flexible) ---
-google-generativeai>=0.8.0
-google-api-core>=2.30.0
+# --- Authentication & Utilities ---
+django-allauth>=65.18.0
+django-widget-tweaks>=1.5.1
+PyJWT>=2.12.1
+requests>=2.34.2
+oauthlib>=3.3.1
+requests-oauthlib>=2.0.0
+
+# --- AI & Generative Services ---
+openai>=2.38.0
+google-generativeai>=0.8.6
 google-api-python-client>=2.197.0
-protobuf>=4.25.0,<6.0.0
+google-api-core>=2.30.3
+proto-plus>=1.28.0
+protobuf>=4.25.8,<6.0.0
 grpcio>=1.75.0
 grpcio-status>=1.75.0
 
-# --- Third-party Services ---
-openai>=2.38.0
+# --- Utility & Integration ---
 razorpay>=2.0.1
-twilio>=9.10.0
-django-allauth>=65.0.0
-
-# --- Other Dependencies ---
-aiohttp>=3.13.0
-requests>=2.34.0
-Pillow>=12.0.0
+twilio>=9.10.9
+pillow>=12.2.0
+tqdm>=4.67.3
+sqlparse>=0.5.5
